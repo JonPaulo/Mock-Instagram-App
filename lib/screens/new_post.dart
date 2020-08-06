@@ -4,6 +4,10 @@ import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart' as Path;
+import 'package:firebase_storage/firebase_storage.dart';
+
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
   @override
@@ -13,14 +17,25 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   File _image;
 
-  void getImage() async {
+  String url;
+
+  Future getImage() async {
     final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-    setState(() {
-      if (pickedFile == null) {
-      } else {
-        _image = File(pickedFile.path);
-      }
-    });
+    try {
+      _image = File(pickedFile.path);
+      setState(() {});
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future uploadPhoto() async {
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(Path.basename(_image.path));
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+    url = await storageReference.getDownloadURL();
+    print('Photo uploaded. $url');
   }
 
   @override
@@ -47,15 +62,30 @@ class _NewPostState extends State<NewPost> {
             Container(height: 400, child: Image.file(_image)),
             WasteEntry(),
             RaisedButton(
-                color: Colors.blue,
-                child: Icon(Icons.cloud_upload, color: Colors.white),
-                shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                onPressed: () {})
+              color: Colors.blue,
+              child: Icon(Icons.cloud_upload, color: Colors.white),
+              shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+              onPressed: () {
+                addPost();
+                Navigator.pop(context, 'update');
+              },
+            )
           ],
         ),
       );
     }
+  }
+
+  void addPost() async {
+    await uploadPhoto();
+    Firestore.instance.collection('posts').add(
+      {
+        'title': 'Example Title',
+        'date': DateTime.now(),
+        'url': url,
+      },
+    );
   }
 }
 

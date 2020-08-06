@@ -27,7 +27,7 @@ class _ListStreamState extends State<ListStream> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('posts').snapshots(),
+      stream: Firestore.instance.collection('posts').orderBy('date', descending: true).snapshots(),
       builder: (content, snapshot) {
         if (snapshot.hasData && snapshot.data.documents.length > 0) {
           return Column(
@@ -71,12 +71,13 @@ class _ListStreamState extends State<ListStream> {
                   RaisedButton(
                       child: Text("Add New Post"),
                       onPressed: () {
-                        Firestore.instance.collection('posts').add(
-                          {
-                            'title': 'Example Title',
-                            'date': DateTime.now(),
-                          },
-                        );
+                        makeNewPost();
+                        // Firestore.instance.collection('posts').add(
+                        //   {
+                        //     'title': 'Example Title',
+                        //     'date': DateTime.now(),
+                        //   },
+                        // );
                       })
                 ],
               )
@@ -87,5 +88,12 @@ class _ListStreamState extends State<ListStream> {
         }
       },
     );
+  }
+
+  void makeNewPost() async {
+    var result = await Navigator.of(context).pushNamed('newPost');
+    if (result == 'update') {
+      setState(() {});
+    }
   }
 }
