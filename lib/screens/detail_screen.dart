@@ -24,21 +24,51 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Post Details")),
+      body: selectImage(),
+    );
+  }
+
+  Widget selectImage() {
     if (_image == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text("Post Details")),
-        body: Center(
-          child: RaisedButton(
+      return Center(
+        child: RaisedButton(
             child: Text("Select Photo"),
             onPressed: () {
               getImage();
-            },
-          ),
+            }),
+      );
+    } else {
+      return SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(height: 400, child: Image.file(_image)),
+            WasteEntry(),
+            RaisedButton(
+                color: Colors.blue,
+                child: Icon(Icons.cloud_upload, color: Colors.white),
+                shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                onPressed: () {})
+          ],
         ),
       );
     }
-    return Container(
-      child: Image.file(_image),
+  }
+}
+
+class WasteEntry extends StatefulWidget {
+  @override
+  _WasteEntryState createState() => _WasteEntryState();
+}
+
+class _WasteEntryState extends State<WasteEntry> {
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      keyboardType: TextInputType.numberWithOptions(),
+      decoration: InputDecoration(labelText: "Number of Wasted Items"),
     );
   }
 }
