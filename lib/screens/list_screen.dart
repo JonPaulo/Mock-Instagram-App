@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'detail_screen.dart';
+
 class ListScreen extends StatelessWidget {
   static final routeName = '/';
 
@@ -37,7 +39,19 @@ class _ListStreamState extends State<ListStream> {
                   },
                 ),
               ),
-              Text("Widget for Debugging")
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: RaisedButton(
+                  color: Theme.of(context).colorScheme.secondary,
+                  child: Icon(Icons.camera_alt, color: Colors.white),
+                  shape:
+                      CircleBorder(side: BorderSide(style: BorderStyle.none)),
+                  padding: EdgeInsets.all(15),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(DetailScreen.routeName);
+                  },
+                ),
+              )
             ],
           );
         } else {
