@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'detail_screen.dart';
 
+import 'package:intl/intl.dart';
+
 class ListScreen extends StatelessWidget {
   static final routeName = '/';
 
@@ -35,22 +37,44 @@ class _ListStreamState extends State<ListStream> {
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (content, index) {
                     var post = snapshot.data.documents[index];
-                    return ListTile(title: Text(post['title']));
+                    return Column(
+                      children: <Widget>[
+                        ListTile(
+                          title: Text(DateFormat('MMMM dd, yyyy').format((post['date'].toDate()))),
+                        ),
+                        Divider(height: 1),
+                      ],
+                    );
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: RaisedButton(
-                  color: Theme.of(context).colorScheme.secondary,
-                  child: Icon(Icons.camera_alt, color: Colors.white),
-                  shape:
-                      CircleBorder(side: BorderSide(style: BorderStyle.none)),
-                  padding: EdgeInsets.all(15),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(DetailScreen.routeName);
-                  },
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: RaisedButton(
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: Icon(Icons.camera_alt, color: Colors.white),
+                      shape: CircleBorder(
+                          side: BorderSide(style: BorderStyle.none)),
+                      padding: EdgeInsets.all(15),
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(DetailScreen.routeName);
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                      child: Text("Add New Post"),
+                      onPressed: () {
+                        Firestore.instance.collection('posts').add(
+                          {
+                            'title': 'Example Title',
+                            'date': DateTime.now(),
+                          },
+                        );
+                      })
+                ],
               )
             ],
           );
