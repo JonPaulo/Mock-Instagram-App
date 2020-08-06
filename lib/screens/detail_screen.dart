@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class DetailScreen extends StatefulWidget {
   static final routeName = 'detailScreen';
@@ -10,65 +10,26 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  File _image;
-
-  void getImage() async {
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
-    setState(() {
-      if (pickedFile == null) {
-      } else {
-        _image = File(pickedFile.path);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    DocumentSnapshot data = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(title: Text("Post Details")),
-      body: selectImage(),
-    );
-  }
-
-  Widget selectImage() {
-    if (_image == null) {
-      return Center(
-        child: RaisedButton(
-            child: Text("Select Photo"),
-            onPressed: () {
-              getImage();
-            }),
-      );
-    } else {
-      return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(height: 400, child: Image.file(_image)),
-            WasteEntry(),
-            RaisedButton(
-                color: Colors.blue,
-                child: Icon(Icons.cloud_upload, color: Colors.white),
-                shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                onPressed: () {})
-          ],
-        ),
-      );
-    }
-  }
-}
-
-class WasteEntry extends StatefulWidget {
-  @override
-  _WasteEntryState createState() => _WasteEntryState();
-}
-
-class _WasteEntryState extends State<WasteEntry> {
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: TextInputType.numberWithOptions(),
-      decoration: InputDecoration(labelText: "Number of Wasted Items"),
+      appBar: AppBar(title: Text("Wasteagram")),
+      body: Column(
+        children: <Widget>[
+          Text(
+            DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          Expanded(
+            child: Image.network(data['url']),
+          ),
+          Text(
+            data['title'],
+            style: Theme.of(context).textTheme.headline5,
+          ),
+        ],
+      ),
     );
   }
 }

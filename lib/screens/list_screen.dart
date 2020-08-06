@@ -40,7 +40,11 @@ class _ListStreamState extends State<ListStream> {
                     return Column(
                       children: <Widget>[
                         ListTile(
-                          title: Text(DateFormat('MMMM dd, yyyy').format((post['date'].toDate()))),
+                          title: Text(DateFormat('MMMM dd, yyyy')
+                              .format((post['date'].toDate()))),
+                          onTap: () => Navigator.pushNamed(
+                              context, DetailScreen.routeName,
+                              arguments: snapshot.data.documents[index]),
                         ),
                         Divider(height: 1),
                       ],
