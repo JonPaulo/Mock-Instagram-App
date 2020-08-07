@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
@@ -18,6 +19,7 @@ class _NewPostState extends State<NewPost> {
   File _image;
 
   String url;
+  int wasteCount;
 
   Future getImage() async {
     final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
@@ -68,7 +70,7 @@ class _NewPostState extends State<NewPost> {
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
               onPressed: () {
                 addPost();
-                Navigator.pop(context, 'update');
+                Navigator.pop(context);
               },
             )
           ],
@@ -95,11 +97,17 @@ class WasteEntry extends StatefulWidget {
 }
 
 class _WasteEntryState extends State<WasteEntry> {
+  int wasteCount;
+  
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: TextInputType.numberWithOptions(),
       decoration: InputDecoration(labelText: "Number of Wasted Items"),
+      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+      onSaved: (choice) {
+        wasteCount = int.parse(choice);
+      },
     );
   }
 }

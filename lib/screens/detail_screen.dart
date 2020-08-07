@@ -21,9 +21,10 @@ class _DetailScreenState extends State<DetailScreen> {
             DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
             style: Theme.of(context).textTheme.headline5,
           ),
-          Expanded(
-            child: Image.network(data['url']),
-          ),
+          Container(
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Image.network(data['url'])),
           Text(
             data['title'],
             style: Theme.of(context).textTheme.headline5,

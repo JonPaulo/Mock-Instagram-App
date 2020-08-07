@@ -6,6 +6,8 @@ import 'detail_screen.dart';
 
 import 'package:intl/intl.dart';
 
+import 'new_post.dart';
+
 class ListScreen extends StatelessWidget {
   static final routeName = '/';
 
@@ -14,6 +16,19 @@ class ListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Wasteagram")),
       body: Container(child: ListStream()),
+      bottomNavigationBar: GestureDetector(
+        child: Container(
+          height: 50,
+          child: BottomAppBar(
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            color: Colors.blue,
+          ),
+        ),
+        onTap: () => Navigator.pushNamed(context, NewPost.routeName),
+      ),
     );
   }
 }
@@ -27,7 +42,10 @@ class _ListStreamState extends State<ListStream> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: Firestore.instance.collection('posts').orderBy('date', descending: true).snapshots(),
+      stream: Firestore.instance
+          .collection('posts')
+          .orderBy('date', descending: true)
+          .snapshots(),
       builder: (content, snapshot) {
         if (snapshot.hasData && snapshot.data.documents.length > 0) {
           return Column(
@@ -52,35 +70,6 @@ class _ListStreamState extends State<ListStream> {
                   },
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: RaisedButton(
-                      color: Theme.of(context).colorScheme.secondary,
-                      child: Icon(Icons.camera_alt, color: Colors.white),
-                      shape: CircleBorder(
-                          side: BorderSide(style: BorderStyle.none)),
-                      padding: EdgeInsets.all(15),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(DetailScreen.routeName);
-                      },
-                    ),
-                  ),
-                  RaisedButton(
-                      child: Text("Add New Post"),
-                      onPressed: () {
-                        makeNewPost();
-                        // Firestore.instance.collection('posts').add(
-                        //   {
-                        //     'title': 'Example Title',
-                        //     'date': DateTime.now(),
-                        //   },
-                        // );
-                      })
-                ],
-              )
             ],
           );
         } else {
@@ -88,12 +77,5 @@ class _ListStreamState extends State<ListStream> {
         }
       },
     );
-  }
-
-  void makeNewPost() async {
-    var result = await Navigator.of(context).pushNamed('newPost');
-    if (result == 'update') {
-      setState(() {});
-    }
   }
 }
