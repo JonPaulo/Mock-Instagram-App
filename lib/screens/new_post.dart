@@ -8,6 +8,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart' as Path;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'package:wasteagram/models/food_waste_post.dart';
+
+import 'package:location/location.dart';
 
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
@@ -18,8 +21,21 @@ class NewPost extends StatefulWidget {
 class _NewPostState extends State<NewPost> {
   File _image;
 
-  String url;
-  int wasteCount;
+  final formKey = GlobalKey<FormState>();
+  final _foodWastePost = FoodWastePost();
+
+  Location location = Location();
+  LocationData _locationData;
+
+  bool _serviceEnabled;
+
+  PermissionStatus _permissionGranted;
+
+  @override
+  initState() {
+    super.initState();
+    askForApproval();
+  }
 
   Future getImage() async {
     final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
@@ -36,8 +52,11 @@ class _NewPostState extends State<NewPost> {
         FirebaseStorage.instance.ref().child(Path.basename(_image.path));
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
-    url = await storageReference.getDownloadURL();
-    print('Photo uploaded. $url');
+    _foodWastePost.photoURL = await storageReference.getDownloadURL();
+    _locationData = await location.getLocation();
+    _foodWastePost.longitude = _locationData.longitude;
+    _foodWastePost.latitude = _locationData.latitude;
+    print('Photo uploaded. ${_foodWastePost.photoURL}');
   }
 
   @override
@@ -59,55 +78,84 @@ class _NewPostState extends State<NewPost> {
       );
     } else {
       return SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(height: 400, child: Image.file(_image)),
-            WasteEntry(),
-            RaisedButton(
-              color: Colors.blue,
-              child: Icon(Icons.cloud_upload, color: Colors.white),
-              shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-              onPressed: () {
-                addPost();
-                Navigator.pop(context);
-              },
-            )
-          ],
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: <Widget>[
+              Container(height: 400, child: Image.file(_image)),
+              wasteEntry(),
+              RaisedButton(
+                color: Colors.blue,
+                child: Icon(Icons.cloud_upload, color: Colors.white),
+                shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                onPressed: () {
+                  print("on pressfdsaklfajds");
+                  addPost();
+                },
+              )
+            ],
+          ),
         ),
       );
     }
   }
 
   void addPost() async {
-    await uploadPhoto();
-    Firestore.instance.collection('posts').add(
-      {
-        'title': 'Example Title',
-        'date': DateTime.now(),
-        'url': url,
-      },
-    );
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      print("UPLOADING PHOTO");
+      await uploadPhoto();
+      print("PHOTO UPLOADED");
+      await submitWastePost(_foodWastePost);
+      print("SUBMIT WASTE POST COMPLETED");
+      Navigator.pop(context);
+    }
   }
-}
 
-class WasteEntry extends StatefulWidget {
-  @override
-  _WasteEntryState createState() => _WasteEntryState();
-}
+  Future submitWastePost(FoodWastePost post) async {
+    Firestore.instance.collection('posts').add(_foodWastePost.fromMap());
+  }
 
-class _WasteEntryState extends State<WasteEntry> {
-  int wasteCount;
-  
-  @override
-  Widget build(BuildContext context) {
+  Widget wasteEntry() {
     return TextFormField(
       keyboardType: TextInputType.numberWithOptions(),
       decoration: InputDecoration(labelText: "Number of Wasted Items"),
       inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
       onSaved: (choice) {
-        wasteCount = int.parse(choice);
+        _foodWastePost.quantity = int.parse(choice);
+      },
+      validator: (value) {
+        print("Value: $value");
+        return value.isEmpty ? 'Wasted item count must not be empty' : null;
       },
     );
+  }
+
+  void askForApproval() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    setState(() {});
+  }
+
+  void retrieveLocation() async {
+    _locationData = await location.getLocation();
+    print("location data: $_locationData");
+    setState(() {});
   }
 }

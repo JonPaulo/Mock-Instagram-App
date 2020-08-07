@@ -60,6 +60,7 @@ class _ListStreamState extends State<ListStream> {
                         ListTile(
                           title: Text(DateFormat('MMMM dd, yyyy')
                               .format((post['date'].toDate()))),
+                          trailing: Text(post['quantity'].toString()),
                           onTap: () => Navigator.pushNamed(
                               context, DetailScreen.routeName,
                               arguments: snapshot.data.documents[index]),

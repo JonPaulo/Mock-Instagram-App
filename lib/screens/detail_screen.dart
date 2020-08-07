@@ -22,12 +22,22 @@ class _DetailScreenState extends State<DetailScreen> {
             style: Theme.of(context).textTheme.headline5,
           ),
           Container(
-            alignment: Alignment.center,
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: Image.network(data['url'])),
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: Image.network(data['photoURL'])),
           Text(
-            data['title'],
+            "Wasted Food: ${data['quantity']}",
             style: Theme.of(context).textTheme.headline5,
+          ),
+          Padding(
+            padding: EdgeInsets.all(30),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(data['latitude'].toString()),
+              Text(data['longitude'].toString()),
+            ],
           ),
         ],
       ),
