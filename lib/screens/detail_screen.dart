@@ -14,7 +14,10 @@ class _DetailScreenState extends State<DetailScreen> {
   Widget build(BuildContext context) {
     DocumentSnapshot data = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(title: Text("Wasteagram")),
+      appBar: AppBar(
+        title: Text("Wasteagram"),
+        backgroundColor: Color(0xFF225374),
+      ),
       body: Column(
         children: <Widget>[
           Text(

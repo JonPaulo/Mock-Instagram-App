@@ -14,7 +14,10 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Wasteagram")),
+      appBar: AppBar(
+        title: Text("Wasteagram"),
+        backgroundColor: Color(0xFF225374),
+      ),
       body: Container(child: ListStream()),
       bottomNavigationBar: GestureDetector(
         child: Container(
@@ -24,7 +27,7 @@ class ListScreen extends StatelessWidget {
               Icons.add,
               color: Colors.white,
             ),
-            color: Colors.blue,
+            color: Color(0xFF225374),
           ),
         ),
         onTap: () => Navigator.pushNamed(context, NewPost.routeName),
@@ -65,7 +68,10 @@ class _ListStreamState extends State<ListStream> {
                               context, DetailScreen.routeName,
                               arguments: snapshot.data.documents[index]),
                         ),
-                        Divider(height: 1),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                        ),
                       ],
                     );
                   },

@@ -35,6 +35,7 @@ class _NewPostState extends State<NewPost> {
   initState() {
     super.initState();
     askForApproval();
+    getImage();
   }
 
   Future getImage() async {
@@ -44,6 +45,7 @@ class _NewPostState extends State<NewPost> {
       setState(() {});
     } catch (e) {
       print("Error: $e");
+      Navigator.of(context).pop();
     }
   }
 
@@ -62,30 +64,30 @@ class _NewPostState extends State<NewPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add New Post")),
+      appBar: AppBar(
+        title: Text("Add New Post"),
+        backgroundColor: Color(0xFF225374),
+      ),
       body: selectImage(),
     );
   }
 
   Widget selectImage() {
     if (_image == null) {
-      return Center(
-        child: RaisedButton(
-            child: Text("Select Photo"),
-            onPressed: () {
-              getImage();
-            }),
-      );
+      return Center(child: CircularProgressIndicator());
     } else {
       return SingleChildScrollView(
         child: Form(
           key: formKey,
           child: Column(
             children: <Widget>[
-              Container(height: 400, child: Image.file(_image)),
+              Container(
+                  padding: EdgeInsets.only(top: 20),
+                  height: 400,
+                  child: Image.file(_image)),
               wasteEntry(),
               RaisedButton(
-                color: Colors.blue,
+                color: Color(0xFF225374),
                 child: Icon(Icons.cloud_upload, color: Colors.white),
                 shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -114,16 +116,19 @@ class _NewPostState extends State<NewPost> {
   }
 
   Widget wasteEntry() {
-    return TextFormField(
-      keyboardType: TextInputType.numberWithOptions(),
-      decoration: InputDecoration(labelText: "Number of Wasted Items"),
-      inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-      onSaved: (choice) {
-        _foodWastePost.quantity = int.parse(choice);
-      },
-      validator: (value) {
-        return value.isEmpty ? 'Wasted item count must not be empty' : null;
-      },
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: TextFormField(
+        keyboardType: TextInputType.numberWithOptions(),
+        decoration: InputDecoration(labelText: "Number of Wasted Items"),
+        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+        onSaved: (choice) {
+          _foodWastePost.quantity = int.parse(choice);
+        },
+        validator: (value) {
+          return value.isEmpty ? 'Wasted item count must not be empty' : null;
+        },
+      ),
     );
   }
 
