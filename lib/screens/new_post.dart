@@ -90,7 +90,6 @@ class _NewPostState extends State<NewPost> {
                 shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 onPressed: () {
-                  print("on pressfdsaklfajds");
                   addPost();
                 },
               )
@@ -104,11 +103,8 @@ class _NewPostState extends State<NewPost> {
   void addPost() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      print("UPLOADING PHOTO");
       await uploadPhoto();
-      print("PHOTO UPLOADED");
       await submitWastePost(_foodWastePost);
-      print("SUBMIT WASTE POST COMPLETED");
       Navigator.pop(context);
     }
   }
@@ -126,7 +122,6 @@ class _NewPostState extends State<NewPost> {
         _foodWastePost.quantity = int.parse(choice);
       },
       validator: (value) {
-        print("Value: $value");
         return value.isEmpty ? 'Wasted item count must not be empty' : null;
       },
     );

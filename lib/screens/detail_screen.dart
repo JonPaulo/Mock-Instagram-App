@@ -26,19 +26,15 @@ class _DetailScreenState extends State<DetailScreen> {
               height: MediaQuery.of(context).size.height * 0.5,
               child: Image.network(data['photoURL'])),
           Text(
-            "Wasted Food: ${data['quantity']}",
+            "${data['quantity']} items",
             style: Theme.of(context).textTheme.headline5,
           ),
           Padding(
             padding: EdgeInsets.all(30),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(data['latitude'].toString()),
-              Text(data['longitude'].toString()),
-            ],
-          ),
+          Center(
+              child: Text(
+                  'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})')),
         ],
       ),
     );
