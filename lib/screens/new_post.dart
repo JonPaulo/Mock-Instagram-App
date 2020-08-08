@@ -107,12 +107,12 @@ class _NewPostState extends State<NewPost> {
       formKey.currentState.save();
       await uploadPhoto();
       await submitWastePost(_foodWastePost);
-      Navigator.pop(context);
+      Navigator.pop(context, 'update');
     }
   }
 
   Future submitWastePost(FoodWastePost post) async {
-    Firestore.instance.collection('posts').add(_foodWastePost.fromMap());
+    Firestore.instance.collection('posts').add(_foodWastePost.submitData());
   }
 
   Widget wasteEntry() {

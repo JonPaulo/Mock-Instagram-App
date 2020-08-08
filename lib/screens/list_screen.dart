@@ -8,17 +8,42 @@ import 'package:intl/intl.dart';
 
 import 'new_post.dart';
 
-class ListScreen extends StatelessWidget {
+class ListScreen extends StatefulWidget {
   static final routeName = '/';
+
+  @override
+  ListScreenState createState() => ListScreenState();
+}
+
+class ListScreenState extends State<ListScreen> {
+  int quantity = 0;
+
+  void getWasteCount() async {
+    quantity = 0;
+    QuerySnapshot snapshot =
+        await Firestore.instance.collection('posts').getDocuments();
+    snapshot.documents.forEach(
+      (element) {
+        quantity += element.data['quantity'];
+      },
+    );
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getWasteCount();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Wasteagram"),
+        title: Text("Wasteagram - $quantity"),
         backgroundColor: Color(0xFF225374),
       ),
-      body: Container(child: ListStream()),
+      body: ListStream(),
       bottomNavigationBar: GestureDetector(
         child: Container(
           height: 50,
@@ -30,9 +55,16 @@ class ListScreen extends StatelessWidget {
             color: Color(0xFF225374),
           ),
         ),
-        onTap: () => Navigator.pushNamed(context, NewPost.routeName),
+        onTap: () => makeNewPost(),
       ),
     );
+  }
+
+  void makeNewPost() async {
+    var result = await Navigator.pushNamed(context, NewPost.routeName);
+    if (result.toString() == 'update') {
+      getWasteCount();
+    }
   }
 }
 

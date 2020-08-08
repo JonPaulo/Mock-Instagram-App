@@ -5,10 +5,7 @@
 // // gestures. You can also use WidgetTester to find child widgets in the widget
 // // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:wasteagram/main.dart';
 
 import 'package:wasteagram/models/food_waste_post.dart';
 
@@ -23,7 +20,7 @@ void main() {
       const latitude = 1.0;
       const longitude = 2.0;
 
-      final food_waste_post = FoodWastePost(
+      final foodWastePost = FoodWastePost(
         date: date,
         photoURL: url,
         quantity: quantity,
@@ -31,11 +28,11 @@ void main() {
         longitude: longitude,
       );
 
-      expect(food_waste_post.date, date);
-      expect(food_waste_post.photoURL, url);
-      expect(food_waste_post.quantity, quantity);
-      expect(food_waste_post.latitude, latitude);
-      expect(food_waste_post.longitude, longitude);
+      expect(foodWastePost.date, date);
+      expect(foodWastePost.photoURL, url);
+      expect(foodWastePost.quantity, quantity);
+      expect(foodWastePost.latitude, latitude);
+      expect(foodWastePost.longitude, longitude);
     },
   );
 }

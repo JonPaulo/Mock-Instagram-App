@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:wasteagram/widgets/widgets.dart';
 
 class DetailScreen extends StatefulWidget {
   static final routeName = 'detailScreen';
@@ -20,20 +21,20 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: Column(
         children: <Widget>[
-          Text(
-            DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
-            style: Theme.of(context).textTheme.headline5,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Text(
+              DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
           Container(
               alignment: Alignment.center,
               height: MediaQuery.of(context).size.height * 0.5,
               child: Image.network(data['photoURL'])),
-          Text(
-            "${data['quantity']} items",
-            style: Theme.of(context).textTheme.headline5,
-          ),
+          ItemCountText(data['quantity']),
           Padding(
-            padding: EdgeInsets.all(30),
+            padding: EdgeInsets.all(10),
           ),
           Center(
               child: Text(
