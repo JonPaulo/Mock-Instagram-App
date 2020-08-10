@@ -86,14 +86,18 @@ class _NewPostState extends State<NewPost> {
                   height: 400,
                   child: Image.file(_image)),
               wasteEntry(),
-              RaisedButton(
-                color: Color(0xFF225374),
-                child: Icon(Icons.cloud_upload, color: Colors.white),
-                shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                onPressed: () {
-                  addPost();
-                },
+              Semantics(
+                hint: 'Submit Post',
+                child: RaisedButton(
+                  color: Color(0xFF225374),
+                  child: Icon(Icons.cloud_upload, color: Colors.white),
+                  shape:
+                      CircleBorder(side: BorderSide(style: BorderStyle.none)),
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  onPressed: () {
+                    addPost();
+                  },
+                ),
               )
             ],
           ),

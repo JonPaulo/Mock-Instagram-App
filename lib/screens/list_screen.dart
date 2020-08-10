@@ -44,18 +44,21 @@ class ListScreenState extends State<ListScreen> {
         backgroundColor: Color(0xFF225374),
       ),
       body: ListStream(),
-      bottomNavigationBar: GestureDetector(
-        child: Container(
-          height: 50,
-          child: BottomAppBar(
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
+      bottomNavigationBar: Semantics(
+        hint: 'Upload a new post',
+        child: GestureDetector(
+          child: Container(
+            height: 50,
+            child: BottomAppBar(
+              child: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              color: Color(0xFF225374),
             ),
-            color: Color(0xFF225374),
           ),
+          onTap: () => makeNewPost(),
         ),
-        onTap: () => makeNewPost(),
       ),
     );
   }
