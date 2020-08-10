@@ -1,11 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UpdatingAppBar extends StatefulWidget with PreferredSizeWidget {
-  const UpdatingAppBar({
-    Key key,
-  }) : super(key: key);
+  const UpdatingAppBar({Key key}) : super(key: key);
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -25,7 +22,6 @@ class _UpdatingAppBarState extends State<UpdatingAppBar> {
         quantity += element.data['quantity'];
       },
     );
-    print("REBUILDING");
     setState(() {});
   }
 

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:wasteagram/widgets/widgets.dart';
+
+import '../widgets/widgets.dart';
 
 class DetailScreen extends StatefulWidget {
   static final routeName = 'detailScreen';
@@ -29,16 +29,18 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
           ),
           Container(
-              alignment: Alignment.center,
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: Image.network(data['photoURL'])),
+            alignment: Alignment.center,
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Image.network(data['photoURL']),
+          ),
           ItemCountText(data['quantity']),
           Padding(
             padding: EdgeInsets.all(10),
           ),
           Center(
-              child: Text(
-                  'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})')),
+            child: Text(
+                'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})'),
+          ),
         ],
       ),
     );

@@ -10,8 +10,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wasteagram/models/food_waste_post.dart';
 import 'package:flutter/material.dart';
 import 'package:wasteagram/screens/new_post.dart';
+import 'package:wasteagram/app.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:wasteagram/screens/list_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
+  var foodWastePost;
+
   test(
     'Post created from Map should have appropriate property values',
     () {
@@ -22,7 +29,7 @@ void main() {
       const latitude = 1.0;
       const longitude = 2.0;
 
-      final foodWastePost = FoodWastePost(
+      foodWastePost = FoodWastePost(
         date: date,
         photoURL: url,
         quantity: quantity,
@@ -38,21 +45,81 @@ void main() {
     },
   );
 
+  test('Post created from Map should have appropriate property values', () {
+    print("Map Data");
+
+    expect(foodWastePost.submitData(), isMap);
+
+    print(foodWastePost.submitData());
+  });
+
   // Define a test. The TestWidgets function also provides a WidgetTester
   // to work with. The WidgetTester allows building and interacting
   // with widgets in the test environment.
-  testWidgets('MyWidget has a title and message', (WidgetTester tester) async {
-    // Create the widget by telling the tester to build it.
-    await tester.pumpWidget(MyWidget(title: 'T', message: 'M'));
 
+  testWidgets('My Widget can upload', (WidgetTester tester) async {
+    // Create the widget by telling the tester to build it.
+    // await tester.pumpWidget(App());
+
+    final fdsa = ListScreen();
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(),
+            body: ListScreen(),
+          ),
+        ),
+      );
+      await tester.idle();
+      await tester.pump(Duration.zero);
+
+      // await tester.idle();
+    });
+
+    final test = find.byKey(Key('streamBuilder'));
+    expect(test, findsOneWidget);
+    await tester.pump(Duration(seconds: 5));
+
+    await tester.pump(Duration.zero);
+
+    final test2 = find.byKey(Key('addPostButton'));
+    expect(test2, findsOneWidget);
+
+    await tester.pump(Duration(seconds: 10));
+    await tester.pump(Duration.zero);
+    await tester.pump(Duration.zero);
+
+    final test3 = find.byKey(Key('jkj'));
+    expect(test3, findsWidgets);
     // Create the Finders.
-    final titleFinder = find.byType(Scaffold);
-    final messageFinder = find.text('M');
+    // final addButton = find.byKey(Key('add-button'));
+
+    await tester.runAsync(() async {
+      expect(test2, findsOneWidget);
+      print("fdsa");
+    });
+
+    await tester.pump(Duration(seconds: 3));
+    // final firstPost = find.byKey(ValueKey('post-0'));
+    // expect(firstPost, findsOneWidget);
+
+    // final firstPost = find.byKey(ValueKey('post-0'));
+    // expect(firstPost, findsOneWidget);
+    // expect(addButton, findsOneWidget);
+    // await tester.tap(firstPost);
+
+    print("dsafdasfasf");
+
+    await tester.pump();
+    // final shutter = find.bySemanticsLabel('shutter');
+    // final shutter = find.text('shutter');
+    // final shutter = find.widgetWithIcon(Icon, Icons.camera_alt);
 
     // Use the `findsOneWidget` matcher provided by flutter_test to
     // verify that the Text widgets appear exactly once in the widget tree.
-    expect(titleFinder, findsOneWidget);
-    expect(messageFinder, findsOneWidget);
+    // expect(shutter, findsOneWidget);
   });
 }
 
@@ -76,5 +143,4 @@ class MyWidget extends StatelessWidget {
       ),
     );
   }
-
 }

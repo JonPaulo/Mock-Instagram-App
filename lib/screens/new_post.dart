@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-
 import 'dart:io';
 
-import 'package:image_picker/image_picker.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path/path.dart' as Path;
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wasteagram/models/food_waste_post.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
+import 'package:path/path.dart' as Path;
+
+import '../models/food_waste_post.dart';
+
 
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
@@ -65,6 +64,7 @@ class _NewPostState extends State<NewPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        key: Key('newPost'),
         title: Text("Add New Post"),
         backgroundColor: Color(0xFF225374),
       ),
@@ -77,6 +77,7 @@ class _NewPostState extends State<NewPost> {
       return Center(child: CircularProgressIndicator());
     } else {
       return SingleChildScrollView(
+        key: Key('ffff'),
         child: Form(
           key: formKey,
           child: Column(
@@ -87,6 +88,7 @@ class _NewPostState extends State<NewPost> {
                   child: Image.file(_image)),
               wasteEntry(),
               Semantics(
+                key: Key('submitPost'),
                 hint: 'Submit Post',
                 child: RaisedButton(
                   color: Color(0xFF225374),
@@ -123,6 +125,7 @@ class _NewPostState extends State<NewPost> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextFormField(
+        key: Key('enterWasteCount'),
         keyboardType: TextInputType.numberWithOptions(),
         decoration: InputDecoration(labelText: "Number of Wasted Items"),
         inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],

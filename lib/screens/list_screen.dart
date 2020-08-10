@@ -1,21 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'detail_screen.dart';
-
-import 'package:intl/intl.dart';
-
 import 'new_post.dart';
+import '../widgets/list_stream.dart';
 
 class ListScreen extends StatefulWidget {
   static final routeName = '/';
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
+  ListScreen({this.analytics, this.observer});
 
   @override
-  ListScreenState createState() => ListScreenState();
+  ListScreenState createState() =>
+      ListScreenState(analytics: analytics, observer: observer);
 }
 
 class ListScreenState extends State<ListScreen> {
+  final analytics;
+  final observer;
+  ListScreenState({this.analytics, this.observer});
+
   int quantity = 0;
 
   void getWasteCount() async {
@@ -45,8 +52,10 @@ class ListScreenState extends State<ListScreen> {
       ),
       body: ListStream(),
       bottomNavigationBar: Semantics(
-        hint: 'Upload a new post',
+        key: Key('addPostButton'),
+        hint: 'Add a new post',
         child: GestureDetector(
+          key: Key('add-button'),
           child: Container(
             height: 50,
             child: BottomAppBar(
@@ -64,60 +73,14 @@ class ListScreenState extends State<ListScreen> {
   }
 
   void makeNewPost() async {
+    analytics.logEvent(
+      name: 'test_event',
+      parameters: <String, dynamic>{'event': 'Upload a new post was pressed'},
+    );
+    print("Analytics fired.");
     var result = await Navigator.pushNamed(context, NewPost.routeName);
     if (result.toString() == 'update') {
       getWasteCount();
     }
-  }
-}
-
-class ListStream extends StatefulWidget {
-  @override
-  _ListStreamState createState() => _ListStreamState();
-}
-
-class _ListStreamState extends State<ListStream> {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection('posts')
-          .orderBy('date', descending: true)
-          .snapshots(),
-      builder: (content, snapshot) {
-        if (snapshot.hasData && snapshot.data.documents.length > 0) {
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (content, index) {
-                    var post = snapshot.data.documents[index];
-                    return Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text(DateFormat('MMMM dd, yyyy')
-                              .format((post['date'].toDate()))),
-                          trailing: Text(post['quantity'].toString()),
-                          onTap: () => Navigator.pushNamed(
-                              context, DetailScreen.routeName,
-                              arguments: snapshot.data.documents[index]),
-                        ),
-                        Divider(
-                          height: 1,
-                          thickness: 1,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
-    );
   }
 }

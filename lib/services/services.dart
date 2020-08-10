@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:flutter/material.dart';
 
 class CloudServices {
   Location location = Location();
