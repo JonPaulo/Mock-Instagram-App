@@ -12,7 +12,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  
   @override
   Widget build(BuildContext context) {
     DocumentSnapshot data = ModalRoute.of(context).settings.arguments;
@@ -33,14 +32,24 @@ class _DetailScreenState extends State<DetailScreen> {
           Container(
             alignment: Alignment.center,
             height: MediaQuery.of(context).size.height * 0.5,
-            child: Image.network(data['photoURL']),
+            child: Semantics(
+              label: 'The image for the current post',
+              child: Image.network(data['photoURL']),
+            ),
           ),
           ItemCountText(data['quantity']),
           Padding(padding: EdgeInsets.all(10)),
           Center(
-            child: Text(
-              'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})',
-              style: Theme.of(context).textTheme.subtitle1,
+            child: Semantics(
+              label:
+                  'This post was taken at latitude ${data['latitude'].toString()}, '
+                  'longitude ${data['longitude'].toString()}',
+              excludeSemantics: true,
+              child: Text(
+                'Location: (${data['latitude'].toString()}, '
+                '${data['longitude'].toString()})',
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
             ),
           ),
         ],

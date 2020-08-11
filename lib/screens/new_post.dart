@@ -10,6 +10,7 @@ import '../widgets/loading_circle.dart';
 
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
+
   @override
   _NewPostState createState() => _NewPostState();
 }
@@ -72,24 +73,30 @@ class _NewPostState extends State<NewPost> {
     return Container(
       padding: EdgeInsets.only(top: 20),
       height: 400,
-      child: Image.file(_image),
+      child: Semantics(
+        label: 'This will be the image you use for your post',
+        child: Image.file(_image)),
     );
   }
 
   Widget _wasteEntryForm() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: TextFormField(
-        key: Key('enterWasteCount'),
-        keyboardType: TextInputType.numberWithOptions(),
-        decoration: InputDecoration(labelText: "Number of Wasted Items"),
-        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-        onSaved: (choice) {
-          _foodWastePost.quantity = int.parse(choice);
-        },
-        validator: (value) {
-          return value.isEmpty ? 'Wasted item count must not be empty' : null;
-        },
+      child: Semantics(
+        label: 'Enter the amount of wasted food items you see',
+        excludeSemantics: true,
+        child: TextFormField(
+          key: Key('enterWasteCount'),
+          keyboardType: TextInputType.numberWithOptions(),
+          decoration: InputDecoration(labelText: "Number of Wasted Items"),
+          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+          onSaved: (choice) {
+            _foodWastePost.quantity = int.parse(choice);
+          },
+          validator: (value) {
+            return value.isEmpty ? 'Wasted item count must not be empty' : null;
+          },
+        ),
       ),
     );
   }
@@ -97,7 +104,7 @@ class _NewPostState extends State<NewPost> {
   Widget _submitPost(Function addPost) {
     return Semantics(
       key: Key('submitPost'),
-      hint: 'Submit Post',
+      hint: 'Submit your post online',
       child: RaisedButton(
         color: Color(0xFF225374),
         child: Icon(Icons.cloud_upload, color: Colors.white),

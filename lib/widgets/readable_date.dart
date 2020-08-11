@@ -9,6 +9,13 @@ class ReadableDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(DateFormat('MMMM dd, yyyy').format(date.toDate()), style: style,);
+    String formattedDate = DateFormat('MMMM dd, yyyy').format(date.toDate());
+    return Semantics(
+      label: 'The date this was posted:',
+      child: Text(
+        formattedDate,
+        style: style,
+      ),
+    );
   }
 }

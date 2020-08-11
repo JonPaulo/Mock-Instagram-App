@@ -45,14 +45,21 @@ class _ListStreamState extends State<ListStream> {
               var post = snapshot.data.documents[index];
               return Column(
                 children: <Widget>[
-                  ListTile(
-                    key: ValueKey('post-$index'),
-                    title: ReadableDate(date: post['date']),
-                    trailing: Text(
-                      post['quantity'].toString(),
-                      style: TextStyle(fontSize: 18),
+                  Semantics(
+                    label:
+                        'Click to view post with ${post['quantity']} wasted food items',
+                    child: ListTile(
+                      key: ValueKey('post-$index'),
+                      title: ReadableDate(date: post['date']),
+                      trailing: Semantics(
+                        label: 'The wasted food count for this post',
+                        child: Text(
+                          post['quantity'].toString(),
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      onTap: () => _goToPost(post),
                     ),
-                    onTap: () => _goToPost(post),
                   ),
                   Divider(
                     height: 1,

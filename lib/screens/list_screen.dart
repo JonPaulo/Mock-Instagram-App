@@ -37,7 +37,10 @@ class ListScreenState extends State<ListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Wasteagram - $quantity"),
+        title: Semantics(
+          label: 'Wayst-uh-gram main page. There are currently $quantity wasted food items',
+          excludeSemantics: true,
+          child: Text("Wasteagram - $quantity")),
         backgroundColor: Color(0xFF225374),
       ),
       body: ListStream(),
