@@ -9,14 +9,14 @@ import '../services/upload_services.dart';
 import '../widgets/loading_circle.dart';
 import '../helpers/custom_padding.dart';
 
-class NewPost extends StatefulWidget {
+class NewPostScreen extends StatefulWidget {
   static final routeName = 'newPost';
 
   @override
-  _NewPostState createState() => _NewPostState();
+  _NewPostScreenState createState() => _NewPostScreenState();
 }
 
-class _NewPostState extends State<NewPost> {
+class _NewPostScreenState extends State<NewPostScreen> {
   File _image;
 
   final formKey = GlobalKey<FormState>();

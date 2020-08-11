@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
-import '../screens/new_post.dart';
+import '../screens/new_post_screen.dart';
 
 class AddNewPostButton extends StatelessWidget {
   final FirebaseAnalytics analytics;
@@ -17,7 +17,7 @@ class AddNewPostButton extends StatelessWidget {
       },
     );
     print("Analytics fired.");
-    var result = await Navigator.pushNamed(context, NewPost.routeName);
+    var result = await Navigator.pushNamed(context, NewPostScreen.routeName);
     if (result.toString() == 'update') {
       getWasteCount();
     }

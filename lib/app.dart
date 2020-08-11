@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'screens/detail_screen.dart';
 import 'screens/list_screen.dart';
-import 'screens/new_post.dart';
+import 'screens/new_post_screen.dart';
 
 class App extends StatelessWidget {
   static final routes = {
     ListScreen.routeName: (context) => ListScreen(analytics: analytics, observer: observer),
     DetailScreen.routeName: (context) => DetailScreen(),
-    NewPost.routeName: (context) => NewPost(),
+    NewPostScreen.routeName: (context) => NewPostScreen(),
   };
 
   static FirebaseAnalytics analytics = FirebaseAnalytics();

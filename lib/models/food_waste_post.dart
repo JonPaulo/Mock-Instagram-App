@@ -8,7 +8,7 @@ class FoodWastePost {
   FoodWastePost({this.date, this.imageURL, this.quantity, this.latitude, this.longitude});
 
   Map<String, dynamic> submitData() {
-    this.date = DateTime.now();
+    this.date = this.date ?? DateTime.now();
     return {
       'date': this.date,
       'imageURL': this.imageURL,
