@@ -47,7 +47,7 @@ class _ListStreamState extends State<ListStream> {
                 children: <Widget>[
                   Semantics(
                     label:
-                        'Click to view post with ${post['quantity']} wasted food items',
+                        'Click to view a post',
                     child: ListTile(
                       key: ValueKey('post-$index'),
                       title: ReadableDate(date: post['date']),

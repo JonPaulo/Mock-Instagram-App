@@ -38,13 +38,15 @@ class ListScreenState extends State<ListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Semantics(
-          label: 'Wayst-uh-gram main page. There are currently $quantity wasted food items',
-          excludeSemantics: true,
-          child: Text("Wasteagram - $quantity")),
+            label:
+                'Wayst-uh-gram main page. There are currently $quantity wasted food items',
+            excludeSemantics: true,
+            child: Text("Wasteagram - $quantity")),
         backgroundColor: Color(0xFF225374),
       ),
       body: ListStream(),
-      bottomNavigationBar: AddNewPostButton(analytics, getWasteCount),
+      floatingActionButton: AddNewPostButton(analytics, getWasteCount),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
