@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../widgets/widgets.dart';
+import '../widgets/item_count_text.dart';
 import '../widgets/readable_date.dart';
 
 class DetailScreen extends StatefulWidget {
   static final routeName = 'detailScreen';
+
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  
   @override
   Widget build(BuildContext context) {
     DocumentSnapshot data = ModalRoute.of(context).settings.arguments;
@@ -24,11 +25,10 @@ class _DetailScreenState extends State<DetailScreen> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: 
-            // Text(
-              // DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
-              // style: Theme.of(context).textTheme.headline5,
-              ReadableDate(date: data['date'], style: Theme.of(context).textTheme.headline5),
+            child: ReadableDate(
+              date: data['date'],
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
           Container(
             alignment: Alignment.center,
@@ -36,12 +36,12 @@ class _DetailScreenState extends State<DetailScreen> {
             child: Image.network(data['photoURL']),
           ),
           ItemCountText(data['quantity']),
-          Padding(
-            padding: EdgeInsets.all(10),
-          ),
+          Padding(padding: EdgeInsets.all(10)),
           Center(
             child: Text(
-                'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})'),
+              'Location: (${data['latitude'].toString()}, ${data['longitude'].toString()})',
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
           ),
         ],
       ),

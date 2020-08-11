@@ -9,12 +9,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:wasteagram/models/food_waste_post.dart';
 import 'package:flutter/material.dart';
-import 'package:wasteagram/screens/new_post.dart';
-import 'package:wasteagram/app.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:wasteagram/screens/new_post.dart';
+// import 'package:wasteagram/app.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:wasteagram/screens/list_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
 
 void main() {
   var foodWastePost;
@@ -61,7 +61,7 @@ void main() {
     // Create the widget by telling the tester to build it.
     // await tester.pumpWidget(App());
 
-    final fdsa = ListScreen();
+    // final fdsa = ListScreen();
 
     await tester.runAsync(() async {
       await tester.pumpWidget(

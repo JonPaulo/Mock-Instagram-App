@@ -23,32 +23,7 @@ class _ListStreamState extends State<ListStream> {
           .snapshots(),
       builder: (content, snapshot) {
         if (snapshot.hasData && snapshot.data.documents.length > 0) {
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (content, index) {
-                    var post = snapshot.data.documents[index];
-                    return Column(
-                      children: <Widget>[
-                        ListTile(
-                          key: ValueKey('post-$index'),
-                          title: ReadableDate(date: post['date']),
-                          trailing: Text(post['quantity'].toString()),
-                          onTap: () => goToPost(post),
-                        ),
-                        Divider(
-                          height: 1,
-                          thickness: 1,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
+          return _listOfEntries(snapshot, _goToPost);
         } else {
           return const LoadingCircle();
         }
@@ -56,7 +31,39 @@ class _ListStreamState extends State<ListStream> {
     );
   }
 
-  void goToPost(DocumentSnapshot post) {
+  void _goToPost(DocumentSnapshot post) {
     Navigator.pushNamed(context, DetailScreen.routeName, arguments: post);
+  }
+
+  Widget _listOfEntries(AsyncSnapshot snapshot, Function post) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (content, index) {
+              var post = snapshot.data.documents[index];
+              return Column(
+                children: <Widget>[
+                  ListTile(
+                    key: ValueKey('post-$index'),
+                    title: ReadableDate(date: post['date']),
+                    trailing: Text(
+                      post['quantity'].toString(),
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    onTap: () => _goToPost(post),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

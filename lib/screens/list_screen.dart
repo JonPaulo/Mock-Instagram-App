@@ -8,6 +8,7 @@ import '../widgets/add_new_post.dart';
 
 class ListScreen extends StatefulWidget {
   static final routeName = '/';
+
   final FirebaseAnalytics analytics;
   final FirebaseAnalyticsObserver observer;
 
@@ -21,6 +22,7 @@ class ListScreen extends StatefulWidget {
 class ListScreenState extends State<ListScreen> {
   final analytics;
   final observer;
+
   ListScreenState({this.analytics, this.observer});
 
   int quantity = 0;

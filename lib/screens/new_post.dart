@@ -23,10 +23,10 @@ class _NewPostState extends State<NewPost> {
   @override
   initState() {
     super.initState();
-    getImage();
+    _getImage();
   }
 
-  Future getImage() async {
+  Future _getImage() async {
     final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
     try {
       _image = File(pickedFile.path);
@@ -45,11 +45,11 @@ class _NewPostState extends State<NewPost> {
         title: Text("Add New Post"),
         backgroundColor: Color(0xFF225374),
       ),
-      body: selectImage(),
+      body: _entryForm(),
     );
   }
 
-  Widget selectImage() {
+  Widget _entryForm() {
     if (_image == null) {
       return LoadingCircle();
     } else {
@@ -58,9 +58,9 @@ class _NewPostState extends State<NewPost> {
           key: formKey,
           child: Column(
             children: <Widget>[
-              imageContainer(_image),
-              wasteEntryForm(),
-              submitPost(addPost),
+              _imageContainer(_image),
+              _wasteEntryForm(),
+              _submitPost(_addPost),
             ],
           ),
         ),
@@ -68,16 +68,7 @@ class _NewPostState extends State<NewPost> {
     }
   }
 
-  void addPost() async {
-    if (formKey.currentState.validate()) {
-      formKey.currentState.save();
-      await uploadPhoto(_foodWastePost, _image);
-      await submitWastePost(_foodWastePost);
-      Navigator.pop(context, 'update');
-    }
-  }
-
-  Widget imageContainer(File image) {
+  Widget _imageContainer(File image) {
     return Container(
       padding: EdgeInsets.only(top: 20),
       height: 400,
@@ -85,7 +76,7 @@ class _NewPostState extends State<NewPost> {
     );
   }
 
-  Widget wasteEntryForm() {
+  Widget _wasteEntryForm() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextFormField(
@@ -103,7 +94,7 @@ class _NewPostState extends State<NewPost> {
     );
   }
 
-  Widget submitPost(Function addPost) {
+  Widget _submitPost(Function addPost) {
     return Semantics(
       key: Key('submitPost'),
       hint: 'Submit Post',
@@ -117,5 +108,14 @@ class _NewPostState extends State<NewPost> {
         },
       ),
     );
+  }
+
+  void _addPost() async {
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      await uploadPhoto(_foodWastePost, _image);
+      await submitWastePost(_foodWastePost);
+      Navigator.pop(context, 'update');
+    }
   }
 }

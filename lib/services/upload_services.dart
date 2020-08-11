@@ -7,6 +7,23 @@ import 'package:path/path.dart' as Path;
 
 import '../models/food_waste_post.dart';
 
+Future uploadPhoto(FoodWastePost _foodWastePost, File _image) async {
+  Location location = Location();
+  LocationData _locationData;
+
+  _askForApproval(location, _locationData);
+
+  StorageReference storageReference =
+      FirebaseStorage.instance.ref().child(Path.basename(_image.path));
+  StorageUploadTask uploadTask = storageReference.putFile(_image);
+  await uploadTask.onComplete;
+  _foodWastePost.photoURL = await storageReference.getDownloadURL();
+  _locationData = await location.getLocation();
+  _foodWastePost.longitude = _locationData.longitude;
+  _foodWastePost.latitude = _locationData.latitude;
+  print('Photo uploaded. ${_foodWastePost.photoURL}');
+}
+
 void _askForApproval(Location location, LocationData _locationData) async {
   bool _serviceEnabled;
 
@@ -26,23 +43,6 @@ void _askForApproval(Location location, LocationData _locationData) async {
       return;
     }
   }
-}
-
-Future uploadPhoto(FoodWastePost _foodWastePost, File _image) async {
-  Location location = Location();
-  LocationData _locationData;
-
-  _askForApproval(location, _locationData);
-
-  StorageReference storageReference =
-      FirebaseStorage.instance.ref().child(Path.basename(_image.path));
-  StorageUploadTask uploadTask = storageReference.putFile(_image);
-  await uploadTask.onComplete;
-  _foodWastePost.photoURL = await storageReference.getDownloadURL();
-  _locationData = await location.getLocation();
-  _foodWastePost.longitude = _locationData.longitude;
-  _foodWastePost.latitude = _locationData.latitude;
-  print('Photo uploaded. ${_foodWastePost.photoURL}');
 }
 
 Future submitWastePost(FoodWastePost _foodWastePost) async {
