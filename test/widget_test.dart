@@ -31,14 +31,14 @@ void main() {
 
       foodWastePost = FoodWastePost(
         date: date,
-        photoURL: url,
+        imageURL: url,
         quantity: quantity,
         latitude: latitude,
         longitude: longitude,
       );
 
       expect(foodWastePost.date, date);
-      expect(foodWastePost.photoURL, url);
+      expect(foodWastePost.imageURL, url);
       expect(foodWastePost.quantity, quantity);
       expect(foodWastePost.latitude, latitude);
       expect(foodWastePost.longitude, longitude);

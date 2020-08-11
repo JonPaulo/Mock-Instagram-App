@@ -17,11 +17,11 @@ Future uploadPhoto(FoodWastePost _foodWastePost, File _image) async {
       FirebaseStorage.instance.ref().child(Path.basename(_image.path));
   StorageUploadTask uploadTask = storageReference.putFile(_image);
   await uploadTask.onComplete;
-  _foodWastePost.photoURL = await storageReference.getDownloadURL();
+  _foodWastePost.imageURL = await storageReference.getDownloadURL();
   _locationData = await location.getLocation();
   _foodWastePost.longitude = _locationData.longitude;
   _foodWastePost.latitude = _locationData.latitude;
-  print('Photo uploaded. ${_foodWastePost.photoURL}');
+  print('Photo uploaded. ${_foodWastePost.imageURL}');
 }
 
 void _askForApproval(Location location, LocationData _locationData) async {

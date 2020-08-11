@@ -51,7 +51,7 @@ class _DetailScreenState extends State<DetailScreen> {
       height: customPadding(context, imageHeight: true),
       child: Semantics(
         label: 'The image for the current post',
-        child: Image.network(data['photoURL']),
+        child: Image.network(data['imageURL']),
       ),
     );
   }
