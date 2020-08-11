@@ -3,8 +3,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/add_new_post_button.dart';
 import '../widgets/list_stream.dart';
-import '../widgets/add_new_post.dart';
 
 class ListScreen extends StatefulWidget {
   static final routeName = '/';
