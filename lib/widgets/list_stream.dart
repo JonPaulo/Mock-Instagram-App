@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+import 'package:wasteagram/widgets/readable_date.dart';
+
+import 'loading_circle.dart';
 
 import '../screens/detail_screen.dart';
 
@@ -32,12 +34,9 @@ class _ListStreamState extends State<ListStream> {
                       children: <Widget>[
                         ListTile(
                           key: ValueKey('post-$index'),
-                          title: Text(DateFormat('MMMM dd, yyyy')
-                              .format((post['date'].toDate()))),
+                          title: ReadableDate(date: post['date']),
                           trailing: Text(post['quantity'].toString()),
-                          onTap: () => Navigator.pushNamed(
-                              context, DetailScreen.routeName,
-                              arguments: snapshot.data.documents[index]),
+                          onTap: () => goToPost(post),
                         ),
                         Divider(
                           height: 1,
@@ -51,9 +50,13 @@ class _ListStreamState extends State<ListStream> {
             ],
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const LoadingCircle();
         }
       },
     );
+  }
+
+  void goToPost(DocumentSnapshot post) {
+    Navigator.pushNamed(context, DetailScreen.routeName, arguments: post);
   }
 }

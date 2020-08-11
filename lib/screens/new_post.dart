@@ -1,15 +1,12 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
-import 'package:path/path.dart' as Path;
 
 import '../models/food_waste_post.dart';
-
+import '../services/upload_services.dart';
+import '../widgets/loading_circle.dart';
 
 class NewPost extends StatefulWidget {
   static final routeName = 'newPost';
@@ -23,17 +20,9 @@ class _NewPostState extends State<NewPost> {
   final formKey = GlobalKey<FormState>();
   final _foodWastePost = FoodWastePost();
 
-  Location location = Location();
-  LocationData _locationData;
-
-  bool _serviceEnabled;
-
-  PermissionStatus _permissionGranted;
-
   @override
   initState() {
     super.initState();
-    askForApproval();
     getImage();
   }
 
@@ -42,22 +31,10 @@ class _NewPostState extends State<NewPost> {
     try {
       _image = File(pickedFile.path);
       setState(() {});
-    } catch (e) {
-      print("Error: $e");
+    } catch (error) {
+      print("Error: $error");
       Navigator.of(context).pop();
     }
-  }
-
-  Future uploadPhoto() async {
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(Path.basename(_image.path));
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
-    _foodWastePost.photoURL = await storageReference.getDownloadURL();
-    _locationData = await location.getLocation();
-    _foodWastePost.longitude = _locationData.longitude;
-    _foodWastePost.latitude = _locationData.latitude;
-    print('Photo uploaded. ${_foodWastePost.photoURL}');
   }
 
   @override
@@ -74,33 +51,16 @@ class _NewPostState extends State<NewPost> {
 
   Widget selectImage() {
     if (_image == null) {
-      return Center(child: CircularProgressIndicator());
+      return LoadingCircle();
     } else {
       return SingleChildScrollView(
-        key: Key('ffff'),
         child: Form(
           key: formKey,
           child: Column(
             children: <Widget>[
-              Container(
-                  padding: EdgeInsets.only(top: 20),
-                  height: 400,
-                  child: Image.file(_image)),
-              wasteEntry(),
-              Semantics(
-                key: Key('submitPost'),
-                hint: 'Submit Post',
-                child: RaisedButton(
-                  color: Color(0xFF225374),
-                  child: Icon(Icons.cloud_upload, color: Colors.white),
-                  shape:
-                      CircleBorder(side: BorderSide(style: BorderStyle.none)),
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  onPressed: () {
-                    addPost();
-                  },
-                ),
-              )
+              imageContainer(_image),
+              wasteEntryForm(),
+              submitPost(addPost),
             ],
           ),
         ),
@@ -111,17 +71,21 @@ class _NewPostState extends State<NewPost> {
   void addPost() async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      await uploadPhoto();
+      await uploadPhoto(_foodWastePost, _image);
       await submitWastePost(_foodWastePost);
       Navigator.pop(context, 'update');
     }
   }
 
-  Future submitWastePost(FoodWastePost post) async {
-    Firestore.instance.collection('posts').add(_foodWastePost.submitData());
+  Widget imageContainer(File image) {
+    return Container(
+      padding: EdgeInsets.only(top: 20),
+      height: 400,
+      child: Image.file(_image),
+    );
   }
 
-  Widget wasteEntry() {
+  Widget wasteEntryForm() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: TextFormField(
@@ -139,30 +103,19 @@ class _NewPostState extends State<NewPost> {
     );
   }
 
-  void askForApproval() async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-    setState(() {});
-  }
-
-  void retrieveLocation() async {
-    _locationData = await location.getLocation();
-    print("location data: $_locationData");
-    setState(() {});
+  Widget submitPost(Function addPost) {
+    return Semantics(
+      key: Key('submitPost'),
+      hint: 'Submit Post',
+      child: RaisedButton(
+        color: Color(0xFF225374),
+        child: Icon(Icons.cloud_upload, color: Colors.white),
+        shape: CircleBorder(side: BorderSide(style: BorderStyle.none)),
+        padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        onPressed: () {
+          addPost();
+        },
+      ),
+    );
   }
 }

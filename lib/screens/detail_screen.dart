@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/widgets.dart';
+import '../widgets/readable_date.dart';
 
 class DetailScreen extends StatefulWidget {
   static final routeName = 'detailScreen';
@@ -23,10 +24,11 @@ class _DetailScreenState extends State<DetailScreen> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
-            child: Text(
-              DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
-              style: Theme.of(context).textTheme.headline5,
-            ),
+            child: 
+            // Text(
+              // DateFormat('MMMM dd, yyyy').format((data['date'].toDate())),
+              // style: Theme.of(context).textTheme.headline5,
+              ReadableDate(date: data['date'], style: Theme.of(context).textTheme.headline5),
           ),
           Container(
             alignment: Alignment.center,
