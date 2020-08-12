@@ -7,13 +7,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:wasteagram/models/food_waste_post.dart';
+import '../lib/models/food_waste_post.dart';
 
 void main() {
   var foodWastePost;
 
   test(
-    'Post has appropriate property values and can return Map data',
+    'Post has appropriate property values and returns Map data',
     () {
       final date = DateTime.parse('2020-01-01');
       const url = 'google.com';
@@ -49,18 +49,12 @@ void main() {
   );
 
   test(
-    'Current date is used if \'date\' argument is empty',
+    'Date, quantity, latitude, & longitude are auto-filled if arguments are empty',
     () {
       const url = 'google.com';
-      const quantity = 1;
-      const latitude = 1.0;
-      const longitude = 2.0;
 
       var newPost = FoodWastePost(
         imageURL: url,
-        quantity: quantity,
-        latitude: latitude,
-        longitude: longitude,
       );
 
       expect(newPost.date, isNull);
@@ -69,9 +63,9 @@ void main() {
       expect(newPost.date, isInstanceOf<DateTime>());
 
       expect(newPost.imageURL, url);
-      expect(newPost.quantity, quantity);
-      expect(newPost.latitude, latitude);
-      expect(newPost.longitude, longitude);
+      expect(newPost.quantity, 0);
+      expect(newPost.latitude, 0);
+      expect(newPost.longitude, 0);
     },
   );
 

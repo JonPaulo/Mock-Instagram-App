@@ -10,6 +10,7 @@ import 'package:sentry/sentry.dart' as Sentry;
 
 import '../models/food_waste_post.dart';
 
+// Uploads the image to Cloud Storage
 Future uploadPhoto(FoodWastePost _foodWastePost, File _image) async {
   Location location = Location();
   LocationData _locationData;
@@ -19,14 +20,18 @@ Future uploadPhoto(FoodWastePost _foodWastePost, File _image) async {
   StorageReference storageReference =
       FirebaseStorage.instance.ref().child(Path.basename(_image.path));
   StorageUploadTask uploadTask = storageReference.putFile(_image);
+
   await uploadTask.onComplete;
+
   _foodWastePost.imageURL = await storageReference.getDownloadURL();
   _locationData = await location.getLocation();
   _foodWastePost.longitude = _locationData.longitude;
   _foodWastePost.latitude = _locationData.latitude;
+
   print('Photo uploaded. ${_foodWastePost.imageURL}');
 }
 
+// Ask for approval to use current location
 void _askForApproval(Location location, LocationData _locationData) async {
   bool _serviceEnabled;
 
@@ -48,6 +53,7 @@ void _askForApproval(Location location, LocationData _locationData) async {
   }
 }
 
+// Submits the model data to Cloud Firestore
 Future submitWastePost(FoodWastePost _foodWastePost) async {
   Firestore.instance.collection('posts').add(_foodWastePost.submitData());
 }
