@@ -1,19 +1,25 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../helpers/custom_padding.dart';
 import '../models/food_waste_post.dart';
 import '../services/upload_services.dart';
 import '../widgets/loading_circle.dart';
-import '../helpers/custom_padding.dart';
 
 class NewPostScreen extends StatefulWidget {
   static final routeName = 'newPost';
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
-  _NewPostScreenState createState() => _NewPostScreenState();
+  _NewPostScreenState createState() =>
+      _NewPostScreenState(analytics: analytics, observer: observer);
 }
 
 class _NewPostScreenState extends State<NewPostScreen> {
@@ -21,6 +27,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
   final formKey = GlobalKey<FormState>();
   final _foodWastePost = FoodWastePost();
+
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
+  _NewPostScreenState({this.analytics, this.observer});
 
   @override
   initState() {
@@ -33,8 +44,9 @@ class _NewPostScreenState extends State<NewPostScreen> {
     try {
       _image = File(pickedFile.path);
       setState(() {});
-    } catch (error) {
+    } catch (error, stackTrace) {
       print("Error: $error");
+      reportError(error, stackTrace);
       Navigator.of(context).pop();
     }
   }
@@ -131,6 +143,12 @@ class _NewPostScreenState extends State<NewPostScreen> {
       formKey.currentState.save();
       await uploadPhoto(_foodWastePost, _image);
       await submitWastePost(_foodWastePost);
+      analytics.logEvent(
+        name: 'post_uploaded',
+        parameters: <String, dynamic>{
+          'event': 'The user has uploaded a new post'
+        },
+      );
       Navigator.pop(context, 'update');
     }
   }

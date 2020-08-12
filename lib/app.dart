@@ -8,7 +8,8 @@ import 'screens/new_post_screen.dart';
 
 class App extends StatelessWidget {
   static final routes = {
-    ListScreen.routeName: (context) => ListScreen(analytics: analytics, observer: observer),
+    ListScreen.routeName: (context) =>
+        ListScreen(analytics: analytics, observer: observer),
     DetailScreen.routeName: (context) => DetailScreen(),
     NewPostScreen.routeName: (context) => NewPostScreen(),
   };

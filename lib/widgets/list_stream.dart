@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:wasteagram/widgets/readable_date.dart';
 
 import 'loading_circle.dart';
@@ -8,11 +10,21 @@ import 'loading_circle.dart';
 import '../screens/detail_screen.dart';
 
 class ListStream extends StatefulWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
-  _ListStreamState createState() => _ListStreamState();
+  _ListStreamState createState() =>
+      _ListStreamState(analytics: analytics, observer: observer);
 }
 
 class _ListStreamState extends State<ListStream> {
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
+
+  _ListStreamState({this.analytics, this.observer});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -32,6 +44,12 @@ class _ListStreamState extends State<ListStream> {
   }
 
   void _goToPost(DocumentSnapshot post) {
+    analytics.logEvent(
+      name: 'user_looked_at_post',
+      parameters: <String, dynamic>{
+        'event': 'The user viewed a post with ${post['quantity']} wasted items'
+      },
+    );
     Navigator.pushNamed(context, DetailScreen.routeName, arguments: post);
   }
 
@@ -39,6 +57,7 @@ class _ListStreamState extends State<ListStream> {
     return Column(
       children: [
         Expanded(
+          key: Key("here"),
           child: ListView.builder(
             itemCount: snapshot.data.documents.length,
             itemBuilder: (content, index) {
@@ -46,8 +65,7 @@ class _ListStreamState extends State<ListStream> {
               return Column(
                 children: <Widget>[
                   Semantics(
-                    label:
-                        'Click to view a post',
+                    label: 'Click to view a post',
                     child: ListTile(
                       key: ValueKey('post-$index'),
                       title: ReadableDate(date: post['date']),

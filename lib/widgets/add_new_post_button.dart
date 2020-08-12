@@ -9,20 +9,6 @@ class AddNewPostButton extends StatelessWidget {
 
   const AddNewPostButton(this.analytics, this.getWasteCount);
 
-  void makeNewPost(BuildContext context) async {
-    analytics.logEvent(
-      name: 'new_post',
-      parameters: <String, dynamic>{
-        'event': 'The user wanted to add a new post'
-      },
-    );
-    print("Analytics fired.");
-    var result = await Navigator.pushNamed(context, NewPostScreen.routeName);
-    if (result.toString() == 'update') {
-      getWasteCount();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Semantics(
@@ -37,5 +23,19 @@ class AddNewPostButton extends StatelessWidget {
         onPressed: () => makeNewPost(context),
       ),
     );
+  }
+
+  void makeNewPost(BuildContext context) async {
+    analytics.logEvent(
+      name: 'new_post',
+      parameters: <String, dynamic>{
+        'event': 'The user wanted to add a new post'
+      },
+    );
+    print("Analytics fired.");
+    var result = await Navigator.pushNamed(context, NewPostScreen.routeName);
+    if (result.toString() == 'update') {
+      getWasteCount();
+    }
   }
 }
