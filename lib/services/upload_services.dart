@@ -58,6 +58,7 @@ Future submitWastePost(FoodWastePost _foodWastePost) async {
   Firestore.instance.collection('posts').add(_foodWastePost.submitData());
 }
 
+// Report an error to sentry.io
 Future<void> reportError(dynamic error, dynamic stackTrace) async {
   // if (Foundation.kDebugMode) {
   //   print(stackTrace);
@@ -69,7 +70,6 @@ Future<void> reportError(dynamic error, dynamic stackTrace) async {
   final Sentry.SentryResponse response =
       await sentry.captureException(exception: error, stackTrace: stackTrace);
   if (response.isSuccessful) {
-    print('NO PHOTO SELECTED. ERROR REPORTED TO SENTRY');
     print('Sentry ID: ${response.eventId}');
   } else {
     print('Failed to report to Sentry: ${response.error}');

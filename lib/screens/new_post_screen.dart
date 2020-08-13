@@ -75,6 +75,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
             children: <Widget>[
               _imageContainer(_image),
               _wasteEntryForm(),
+              throwAnError(),
             ],
           ),
         ),
@@ -112,6 +113,20 @@ class _NewPostScreenState extends State<NewPostScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Widget throwAnError() {
+    return RaisedButton(
+      child: Text("Throw an Error"),
+      onPressed: () {
+        try {
+          print(int.parse('fdsa'));
+        } catch (error, stackTrace) {
+          print("Error: $error");
+          reportError(error, stackTrace);
+        }
+      },
     );
   }
 

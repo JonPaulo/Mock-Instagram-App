@@ -57,7 +57,6 @@ class _ListStreamState extends State<ListStream> {
     return Column(
       children: [
         Expanded(
-          key: Key("here"),
           child: ListView.builder(
             itemCount: snapshot.data.documents.length,
             itemBuilder: (content, index) {
@@ -73,16 +72,13 @@ class _ListStreamState extends State<ListStream> {
                         label: 'The wasted food count for this post',
                         child: Text(
                           post['quantity'].toString(),
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18)
                         ),
                       ),
                       onTap: () => _goToPost(post),
                     ),
                   ),
-                  Divider(
-                    height: 1,
-                    thickness: 1,
-                  ),
+                  Divider(height: 1, thickness: 1),
                 ],
               );
             },
